@@ -1,0 +1,53 @@
+version: 2.1
+
+jobs:
+  publish-github-release:
+    docker:
+      - image: cibuilds/github:0.10
+    steps:
+      - checkout
+      - run: 
+          name: "Tag value"
+          command: | 
+            echo "<< pipeline.git.tag >>"
+      - run: 
+          name: "Archive app"
+          command: | 
+            zip -r asf.zip README.md
+      - run:
+          name: "Publish Release on GitHub"
+          command: | 
+            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete << pipeline.git.tag >> ./asf.zip
+
+# Invoke jobs via workflows
+# See: https://circleci.com/docs/2.0/configuration-reference/#workflows
+workflows:
+  conditional-workflow:
+    when:
+        condition: << pipeline.git.tag >>
+    jobs:
+      - publish-github-release:
+          filters:
+            branches:
+              only:
+                - master
+            tags:
+              only: /^\d+\.\d+\.\d+$/
+
+# version: 2.1
+# orbs:
+#   github-release: h-matsuo/github-release@0.1.1
+# jobs:
+#   build:
+#     description: Create dummy file and publish a new release tagged `vX.Y.Z`.
+#     executor: github-release/default
+#     steps:
+#       - run:
+#           command: |
+#             mkdir artifacts
+#             echo dummy > ./artifacts/file
+#       - github-release/create:
+#           tag: $CIRCLE_TAG
+#           title: Version $CIRCLE_TAG
+#           description: This release is version $CIRCLE_TAG .
+#           file-path: ./artifacts/file
