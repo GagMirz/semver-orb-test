@@ -9,7 +9,7 @@ jobs:
       - run: 
           name: "Tag value"
           command: | 
-            echo "<< pipeline.git.tag >>"
+            echo $CIRCLE_TAG
       - run: 
           name: "Archive app"
           command: | 
@@ -23,8 +23,6 @@ jobs:
 # See: https://circleci.com/docs/2.0/configuration-reference/#workflows
 workflows:
   conditional-workflow:
-    when:
-        condition: << pipeline.git.tag >>
     jobs:
       - publish-github-release:
           filters:
