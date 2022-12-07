@@ -9,7 +9,8 @@ jobs:
       - run: 
           name: "Tag value"
           command: | 
-               curl https://api.github.com/repos/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/releases/latest -s | jq .name -r
+              version = `curl https://api.github.com/repos/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/releases/latest -s | jq .name -r`
+              && echo $version
       - run: 
           name: "Archive app"
           command: | 
