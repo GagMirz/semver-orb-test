@@ -9,7 +9,7 @@ jobs:
       - run: 
           name: "Tag value"
           command: | 
-            echo $CIRCLE_TAG
+            echo << pipeline.git.tag >>
       - run: 
           name: "Archive app"
           command: | 
