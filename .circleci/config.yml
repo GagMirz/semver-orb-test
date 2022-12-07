@@ -6,14 +6,15 @@ jobs:
       - image: cibuilds/github:0.10
     steps:
       - checkout
-      - run: 
-          name: "Tag value"
-          command: | 
-              version=`curl https://api.github.com/repos/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/releases/latest -s | jq .name -r` &&
-              git clone https://gist.github.com/GagMirz/750dc7cffbc6cd37750cb07ed5a616d5 SemVer &&
-              chmod 777 SemVer/increment_version.sh 
-              version=`./SemVer/increment_version.sh -p $version`
-              echo "export VERSION=${version}" >> "$BASH_ENV"
+      # - run: 
+      #     name: "Tag value"
+      #     command: | 
+      #         version=`curl https://api.github.com/repos/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/releases/latest -s | jq .name -r` &&
+      #         git clone https://gist.github.com/GagMirz/750dc7cffbc6cd37750cb07ed5a616d5 SemVer &&
+      #         chmod 777 SemVer/increment_version.sh 
+      #         version=`./SemVer/increment_version.sh -p $version`
+      #         echo "export VERSION=${version}" >> "$BASH_ENV"
+      - version-update
       - run: 
           name: "Archive app"
           command: | 
@@ -40,8 +41,15 @@ commands: # a reusable command with parameters
   version-update:
     parameters:
       level:
-        default: 0
-        type: integer
+        default: "p"
+        type: string
     steps:
       - run:
-        name: "SemVer version update"
+          name: "SemVer version update"
+          command: |
+            version=`curl https://api.github.com/repos/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/releases/latest -s | jq .name -r` &&
+            git clone https://gist.github.com/GagMirz/750dc7cffbc6cd37750cb07ed5a616d5 SemVer &&
+            chmod 777 SemVer/increment_version.sh 
+            version=`./SemVer/increment_version.sh -<<parameters.to>> $version`
+            echo "export VERSION=${version}" >> "$BASH_ENV"
+
