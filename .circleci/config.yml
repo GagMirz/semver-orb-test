@@ -11,6 +11,12 @@ jobs:
     steps:
       - attach_workspace:
           at: ./artifacts
+      - run:
+          name: "pwd" 
+          command: ls
+      - run: 
+          name: "ls" 
+          command: pwd
       - run: 
           name: "Archive app"
           command: | 
