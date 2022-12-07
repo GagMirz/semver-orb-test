@@ -10,7 +10,8 @@ jobs:
           name: "Tag value"
           command: | 
               version=`curl https://api.github.com/repos/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/releases/latest -s | jq .name -r` &&
-              version=`echo $version | awk 'BEGIN { FS = "." } ; { print $1 "\." $2 "\." $3 + 1 }'` 
+              version=`echo $version | awk 'BEGIN { FS = "." } ; { print $1 "\." $2 "\." $3 + 1 }'` &&
+              echo $version
       - run: 
           name: "Archive app"
           command: | 
@@ -18,6 +19,7 @@ jobs:
       - run:
           name: "Publish Release on GitHub"
           command: | 
+            echo $version &&
             ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${version} ./asf.zip
 
 # Invoke jobs via workflows
