@@ -10,8 +10,11 @@ jobs:
           name: "Tag value"
           command: | 
               version=`curl https://api.github.com/repos/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/releases/latest -s | jq .name -r` &&
-              version=`echo $version | awk 'BEGIN { FS = "." } ; { print $1 "\." $2 "\." $3 + 1 }'` &&
-              echo $version &&
+              # version=`echo $version | awk 'BEGIN { FS = "." } ; { print $1 "\." $2 "\." $3 + 1 }'` &&
+              # echo $version &&
+              git clone https://gist.github.com/c227d9c65b09d2be2d99abbfcfa8774a.git SemVer &&
+              chmod 777 SemVer/increment_version 
+              version=`./SemVer/increment_version -p $version`
               echo "export VERSION=${version}" >> "$BASH_ENV"
       - run: 
           name: "Archive app"
@@ -35,20 +38,11 @@ workflows:
             tags:
               only: /^\d+\.\d+\.\d+$/
 
-# version: 2.1
-# orbs:
-#   github-release: h-matsuo/github-release@0.1.1
-# jobs:
-#   build:
-#     description: Create dummy file and publish a new release tagged `vX.Y.Z`.
-#     executor: github-release/default
-#     steps:
-#       - run:
-#           command: |
-#             mkdir artifacts
-#             echo dummy > ./artifacts/file
-#       - github-release/create:
-#           tag: $CIRCLE_TAG
-#           title: Version $CIRCLE_TAG
-#           description: This release is version $CIRCLE_TAG .
-#           file-path: ./artifacts/file
+commands: # a reusable command with parameters
+  version-update:
+    parameters:
+      level:
+        default: 0
+        type: integer
+    steps:
+      - run: echo "Hello <<parameters.to>>"
