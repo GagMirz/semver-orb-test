@@ -9,7 +9,7 @@ jobs:
       - run: 
           name: "Tag value"
           command: | 
-            echo << pipeline.git.tag >>
+            echo "<< pipeline.git.tag >>"
       - run: 
           name: "Archive app"
           command: | 
