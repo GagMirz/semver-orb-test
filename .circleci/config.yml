@@ -13,7 +13,7 @@ jobs:
               version=`echo $version | awk 'BEGIN { FS = "." } ; { print $1 "\." $2 "\." $3 + 1 }'` &&
               echo $version &&
               echo 'export VERSION="${version}"' >> "$BASH_ENV" &&
-              echo $VERSION
+              echo 'export VERSION="${version}"'
       - run: 
           name: "Archive app"
           command: | 
