@@ -10,9 +10,7 @@ jobs:
           name: "Tag value"
           command: | 
               version=`curl https://api.github.com/repos/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/releases/latest -s | jq .name -r` &&
-              # version=`echo $version | awk 'BEGIN { FS = "." } ; { print $1 "\." $2 "\." $3 + 1 }'` &&
-              # echo $version &&
-              git clone https://gist.github.com/c227d9c65b09d2be2d99abbfcfa8774a.git SemVer &&
+              git clone https://gist.github.com/GagMirz/750dc7cffbc6cd37750cb07ed5a616d5 SemVer &&
               chmod 777 SemVer/increment_version 
               version=`./SemVer/increment_version -p $version`
               echo "export VERSION=${version}" >> "$BASH_ENV"
@@ -45,4 +43,5 @@ commands: # a reusable command with parameters
         default: 0
         type: integer
     steps:
-      - run: echo "Hello <<parameters.to>>"
+      - run:
+        name: "SemVer version update"
