@@ -9,15 +9,7 @@ jobs:
       - run: 
           name: "Tag value"
           command: | 
-               if [[ $(echo ${CIRCLE_BRANCH} | awk -F'/' '{ print $1}') == "master" ]]
-               then
-                    source ${BASH_ENV}
-                    git config user.email "bb8@opensimsim.com"
-                    git config user.name "oss-bb8"
-                    git tag -a ${NEW_TAG} -m "Updated master tag with version ${NEW_TAG}"
-                    git push -u origin $NEW_TAG
-                    echo "Updated master tag with version ${NEW_TAG}"
-               fi
+               echo "asdf"
       - run: 
           name: "Archive app"
           command: | 
