@@ -11,8 +11,8 @@ jobs:
           command: | 
               version=`curl https://api.github.com/repos/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/releases/latest -s | jq .name -r` &&
               git clone https://gist.github.com/GagMirz/750dc7cffbc6cd37750cb07ed5a616d5 SemVer &&
-              chmod 777 SemVer/increment_version 
-              version=`./SemVer/increment_version -p $version`
+              chmod 777 SemVer/increment_version.sh 
+              version=`./SemVer/increment_version.sh -p $version`
               echo "export VERSION=${version}" >> "$BASH_ENV"
       - run: 
           name: "Archive app"
