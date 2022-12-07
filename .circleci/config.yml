@@ -7,12 +7,12 @@ jobs:
     steps:
       - checkout
       - when:
-          condition: << pipeline.git.tag >>
+          condition:
+              not: << pipeline.git.tag >>
           steps:
             - version-tag-update
       - when:
-          condition:
-              not: << pipeline.git.tag >>
+          condition: << pipeline.git.tag >>
           steps:
             - run: 
                 name: "SemVer version update"
