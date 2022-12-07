@@ -11,7 +11,7 @@ jobs:
           command: | 
               version=`curl https://api.github.com/repos/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/releases/latest -s | jq .name -r` &&
               export version=`echo $version | awk 'BEGIN { FS = "." } ; { print $1 "\." $2 "\." $3 + 1 }'` &&
-              echo 'export VERSION="asdf"' >> "$BASH_ENV"
+              echo 'export VERSION=$version' >> "$BASH_ENV"
       - run: 
           name: "Archive app"
           command: | 
