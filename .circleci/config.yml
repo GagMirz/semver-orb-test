@@ -7,6 +7,10 @@ jobs:
     steps:
       - checkout
       - run: 
+          name: "Tag value"
+          command: | 
+            echo $CIRCLE_TAG
+      - run: 
           name: "Archive app"
           command: | 
             zip -r asf.zip README.md
