@@ -55,7 +55,7 @@ jobs:
             mkdir artifacts
             echo dummy > ./artifacts/file
       - github-release/create:
-          tag: vX.Y.Z
-          title: Version vX.Y.Z
-          description: This release is version vX.Y.Z .
+          tag: ${CIRCLE_TAG}
+          title: Version ${CIRCLE_TAG}
+          description: This release is version ${CIRCLE_TAG} .
           file-path: ./artifacts/file
