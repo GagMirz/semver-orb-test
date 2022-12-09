@@ -40,9 +40,9 @@ workflows:
     jobs:
       - publish-github-release:
           filters:
-            branches:
-              only:
-                - master
+            # branches:
+            #   only:
+            #     - master
             tags:
               only: /^v+\d+\.\d+\.\d+$/
 
