@@ -24,10 +24,10 @@ jobs:
           name: "Archive app"
           command: | 
             zip -r asf.zip README.md
-      - run:
-          name: "Publish Release on GitHub"
-          command: | 
-            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} ./asf.zip
+      # - run:
+      #     name: "Publish Release on GitHub"
+      #     command: | 
+      #       ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} ./asf.zip
       - semver/semver-increment:
           level: "m"
           version: "v0.0.1"
