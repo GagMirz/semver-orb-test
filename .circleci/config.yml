@@ -1,5 +1,8 @@
 version: 2.1
 
+orbs:
+  semver: tmo-orb/semver@1.0.0
+
 jobs:
   publish-github-release:
     docker:
@@ -10,7 +13,7 @@ jobs:
           condition:
               not: << pipeline.git.tag >>
           steps:
-            - version-tag-update
+            - set-new-version-tag
       - when:
           condition: << pipeline.git.tag >>
           steps:
@@ -25,7 +28,13 @@ jobs:
           name: "Publish Release on GitHub"
           command: | 
             ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} ./asf.zip
-
+      - semver/semver-increment:
+          level: "m"
+          version: "v0.0.1"
+      - run: 
+          name: "Read value from semver"
+          command: | 
+            echo $VERSION
 workflows:
   main:
     jobs:
@@ -38,9 +47,11 @@ workflows:
               only: /^v+\d+\.\d+\.\d+$/
 
 commands: # a reusable command with parameters
-  version-tag-update:
+  set-new-version-tag:
+    description: "Get Semver tag from github via git API, update it via script and set into BASH_ENV"
     parameters:
       level:
+        description: "Which semver level will be incremented [M/m/p] for Major/minor/patch"
         default: "p"
         type: string
     steps:
