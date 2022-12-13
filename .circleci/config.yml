@@ -36,18 +36,14 @@ jobs:
           command: |
             version=`curl https://api.github.com/repos/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/releases/latest -s | jq .name -r` &&
             echo "export OLD_VERSION=${version}" >> "$BASH_ENV"
+            echo $OLD_VERSION
       - run:
           name: "Get PR title"
           command: |
-            # GITHUB_API_URL="https://api.github.com/repos/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_USERNAME}/pulls/${CIRCLE_PULL_REQUEST##*/} --header \"Authorization\" $GITHUB_TOKEN"
-            # echo $CIRCLE_PR_NUMBER
-            # export PYTHONIOENCODING=utf8
-            # export PULL_REQUEST_TITLE=$(curl -s $GITHUB_API_URL | python3 -c "import sys, json, re; \
-            # title=json.load(sys.stdin)['title']; \
-            # print(title);")
-            # echo ${CIRCLE_PULL_REQUEST##*/}
-            echo "export TITLE=`git log --format=oneline -n 1 $CIRCLE_SHA1`" >> "$BASH_ENV"
-            # echo "export TITLE=${PULL_REQUEST_TITLE}" >> "$BASH_ENV"
+            title=$(git log --format=oneline -n 1 $CIRCLE_SHA1)
+            echo "export TITLE=\"${title}\"" >> "$BASH_ENV"
+            echo git log --format=oneline -n 1 $CIRCLE_SHA1
+            echo $title
             echo $TITLE
       - semver/flag-value:
           text: $TITLE
