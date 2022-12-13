@@ -48,7 +48,7 @@ jobs:
             # echo ${CIRCLE_PULL_REQUEST##*/}
             echo "export TITLE=\"$(git log --format=oneline -n 1 $CIRCLE_SHA1)\"" >> "$BASH_ENV"
             # echo "export TITLE=${PULL_REQUEST_TITLE}" >> "$BASH_ENV"
-            echo $TITLE
+            echo $(git log --format=oneline -n 1 $CIRCLE_SHA1)
       - semver/flag-value:
           text: $TITLE
           flag: "r"
