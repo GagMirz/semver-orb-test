@@ -42,8 +42,9 @@ jobs:
           command: |
             title=$(git log --format=oneline -n 1 $CIRCLE_SHA1)
             echo "export TITLE=\"${title}\"" >> "$BASH_ENV"
-            echo git log --format=oneline -n 1 $CIRCLE_SHA1
-            echo $title
+      - run: 
+          name: "something"
+          command: |
             echo $TITLE
       - semver/flag-value:
           text: $TITLE
