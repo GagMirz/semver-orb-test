@@ -46,14 +46,14 @@ jobs:
           name: "something"
           command: |
             echo $TITLE
-            echo $VERSION
+            echo $OLD_VERSION
       - semver/flag-value:
           text: $TITLE
           flag: "r"
           answer: "FLAG"
       - semver/semver-increment:
           level: $FLAG
-          version: "v0.0.1"
+          version: ${OLD_VERSION}
       - run:
           name: "Publish Release on GitHub"
           command: | 
