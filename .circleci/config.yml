@@ -48,7 +48,7 @@ jobs:
             echo $TITLE
             echo $OLD_VERSION
       - semver/flag-value:
-          text: $TITLE
+          text: ${TITLE}
           flag: "r"
           answer: "FLAG"
       - semver/semver-increment:
