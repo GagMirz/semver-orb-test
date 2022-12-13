@@ -46,6 +46,7 @@ jobs:
           name: "something"
           command: |
             echo $TITLE
+            echo $VERSION
       - semver/flag-value:
           text: $TITLE
           flag: "r"
