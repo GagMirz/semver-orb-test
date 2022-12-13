@@ -46,8 +46,8 @@ jobs:
             # title=json.load(sys.stdin)['title']; \
             # print(title);")
             # echo ${CIRCLE_PULL_REQUEST##*/}
-            $PULL_REQUEST_TITLE=$(git log --format=oneline -n 1 $CIRCLE_SHA1)
-            echo "export TITLE=${PULL_REQUEST_TITLE}" >> "$BASH_ENV"
+            echo "export TITLE=\"$(git log --format=oneline -n 1 $CIRCLE_SHA1)\"" >> ~/.bashrc
+            # echo "export TITLE=${PULL_REQUEST_TITLE}" >> "$BASH_ENV"
             echo $TITLE
       - semver/flag-value:
           text: $TITLE
