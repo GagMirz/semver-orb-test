@@ -49,7 +49,7 @@ jobs:
             echo $OLD_VERSION
             echo "extra_parameters='{ "text" : "'"$TITLE"'" }'" >> $BASH_ENV
       - semver/flag-value:
-          # text: ${TITLE}
+          text: "Test"
           flag: "r"
           answer: "FLAG"
           parameters: $extra_parameters
