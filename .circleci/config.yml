@@ -47,10 +47,12 @@ jobs:
           command: |
             echo $TITLE
             echo $OLD_VERSION
+            echo "extra_parameters='{ "text" : "'"$TITLE"'" }'" >> $BASH_ENV
       - semver/flag-value:
-          text: ${TITLE}
+          # text: ${TITLE}
           flag: "r"
           answer: "FLAG"
+          parameters: $extra_parameters
       - semver/semver-increment:
           level: $FLAG
           version: ${OLD_VERSION}
