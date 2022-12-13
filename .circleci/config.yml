@@ -45,6 +45,7 @@ jobs:
             title=json.load(sys.stdin)['title']; \
             print(title);")
             echo "export TITLE=${PULL_REQUEST_TITLE}" >> "$BASH_ENV"
+            echo $TITLE
       - semver/flag-value:
           text: $TITLE
           flag: "r"
