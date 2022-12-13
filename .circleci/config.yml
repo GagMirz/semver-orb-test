@@ -26,7 +26,7 @@ jobs:
             zip -r asf.zip README.md
       - run:
           name: "Install python"
-          command: apt-get install python3
+          command: apk add --no-cache python3
       # - run:
       #     name: "Publish Release on GitHub"
       #     command: | 
