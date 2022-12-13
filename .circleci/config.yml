@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  semver: tmo-orb/semver@1.0.3
+  semver: tmo-orb/semver@1.1.0
 
 jobs:
   publish-github-release:
@@ -27,9 +27,21 @@ jobs:
       # - run:
       #     name: "Publish Release on GitHub"
       #     command: | 
-      #       ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${VERSION} ./asf.zip
+      #       ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_USERNAME} -c ${CIRCLE_SHA1} -delete ${VERSION} ./asf.zip
+      - run:
+          name: "Get PR title"
+          command: |
+            GITHUB_API_URL="https://api.github.com/repos/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_USERNAME}/pulls/3 --header \"Authorization\" $GITHUB_TOKEN"
+            export PYTHONIOENCODING=utf8
+            export PULL_REQUEST_BASE_REF=$(curl -s $GITHUB_API_URL | python3 -c "import sys, json, re; \
+            title=json.load(sys.stdin)['title']; \
+            print(title);")
+      - semver/flag-value:
+          text: $TITLE
+          flag: "r"
+          answer: "FLAG"
       - semver/semver-increment:
-          level: "m"
+          level: $FLAG
           version: "v0.0.1"
       - run: 
           name: "Read value from semver"
