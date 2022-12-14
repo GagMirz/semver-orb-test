@@ -13,6 +13,7 @@ jobs:
           name: "Adding environment variables for tests"
           command: |
             echo "export config_path='/home/circleci/.utils.config'" >> "$BASH_ENV"
+            mkdir -p /home/circleci/
             touch /home/circleci/.utils.config
 
       - run: 
