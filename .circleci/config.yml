@@ -23,10 +23,7 @@ jobs:
       - run:
           name: "Install python"
           command: apk add --no-cache python3
-      # - run:
-      #     name: "Publish Release on GitHub"
-      #     command: | 
-      #       ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_USERNAME} -c ${CIRCLE_SHA1} -delete ${VERSION} ./asf.zip
+
       - run:
           name: "Load release_tag parameters to env"
           command: |
@@ -48,7 +45,7 @@ jobs:
       - run:
           name: "Load parameters to env"
           command: |
-            echo "text=\"${$MSG}\"" > $config_path
+            echo "text=\"${MSG}\"" > $config_path
             echo "flag=r" >> $config_path
             echo "answer=RELEASE_LEVEL" >> $config_path
       - semver/flag-value
