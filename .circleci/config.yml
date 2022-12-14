@@ -1,104 +1,90 @@
 version: 2.1
 
 orbs:
-  semver: tmo-orb/semver@1.3.0
+  semver: tmo-orb/semver@1.4.0
 
-jobs:
-  publish-github-release:
-    docker:
-      - image: cibuilds/github:0.10
-    steps:
-      - checkout
-      - run:
-          name: "Adding environment variables for tests"
-          command: |
-            echo "export config_path='/home/circleci/.utils.config'" >> "$BASH_ENV"
-            mkdir -p /home/circleci/
-            touch /home/circleci/.utils.config
+# jobs:
+#   publish-github-release:
+#     docker:
+#       - image: cibuilds/github:0.10
+#     steps:
+#       - checkout
+#       - run:
+#           name: "Adding environment variables for tests"
+#           command: |
+#             echo "export config_path='/home/circleci/.utils.config'" >> "$BASH_ENV"
+#             mkdir -p /home/circleci/
+#             touch /home/circleci/.utils.config
 
-      - run: 
-          name: "Archive app"
-          command: | 
-            zip -r asf.zip README.md
-      - run:
-          name: "Install python"
-          command: apk add --no-cache python3
+#       - run: 
+#           name: "Archive app"
+#           command: | 
+#             zip -r asf.zip README.md
+#       - run:
+#           name: "Install python"
+#           command: apk add --no-cache python3
 
-      - run:
-          name: "Load release_tag parameters to env"
-          command: |
-            echo "answer=OLD_TAG" > $config_path
-      - semver/release_tag
+#       - run:
+#           name: "Load release_tag parameters to env"
+#           command: |
+#             echo "answer=OLD_TAG" > $config_path
+#       - semver/release_tag
 
-      - run:
-          name: "Load commit_message parameters to env"
-          command: |
-            echo "answer=MSG" > $config_path
-      - semver/commit_message
+#       - run:
+#           name: "Load commit_message parameters to env"
+#           command: |
+#             echo "answer=MSG" > $config_path
+#       - semver/commit_message
 
-      - run: 
-          name: "something"
-          command: |
-            echo $OLD_TAG
-            echo $MSG
+#       - run: 
+#           name: "something"
+#           command: |
+#             echo $OLD_TAG
+#             echo $MSG
 
-      - run:
-          name: "Load parameters to env"
-          command: |
-            echo "text=\"${MSG}\"" > $config_path
-            echo "flag=r" >> $config_path
-            echo "answer=RELEASE_LEVEL" >> $config_path
-      - semver/flag-value
+#       - run:
+#           name: "Load parameters to env"
+#           command: |
+#             echo "text=\"${MSG}\"" > $config_path
+#             echo "flag=r" >> $config_path
+#             echo "answer=RELEASE_LEVEL" >> $config_path
+#       - semver/flag-value
 
-      - run: 
-          name: "something"
-          command: |
-            echo $RELEASE_LEVEL
+#       - run: 
+#           name: "something"
+#           command: |
+#             echo $RELEASE_LEVEL
 
-      - run:
-          name: "Load parameters to env"
-          command: |
-            echo "version=\"${OLD_TAG}\"" > $config_path
-            echo "option=\"${RELEASE_LEVEL}\"" >> $config_path
-            echo "answer=NEW_TAG" >> $config_path
-      - semver/semver-increment
+#       - run:
+#           name: "Load parameters to env"
+#           command: |
+#             echo "version=\"${OLD_TAG}\"" > $config_path
+#             echo "option=\"${RELEASE_LEVEL}\"" >> $config_path
+#             echo "answer=NEW_TAG" >> $config_path
+#       - semver/semver-increment
 
-      - run: 
-          name: "something"
-          command: |
-            echo $NEW_TAG
+#       - run: 
+#           name: "something"
+#           command: |
+#             echo $NEW_TAG
 
-      - run:
-          name: "Publish Release on GitHub"
-          command: | 
-            ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${NEW_TAG} ./asf.zip
+#       - run:
+#           name: "Publish Release on GitHub"
+#           command: | 
+#             ghr -t ${GITHUB_TOKEN} -u ${CIRCLE_PROJECT_USERNAME} -r ${CIRCLE_PROJECT_REPONAME} -c ${CIRCLE_SHA1} -delete ${NEW_TAG} ./asf.zip
 
 workflows:
   main:
     jobs:
-      - publish-github-release:
+      - semver/update_semver:
+          assets_path: "./asf.zip"
+          create_asset:
+              - run:
+                  name: "Create ZIP"
+                  command: "zip -r asf.zip README.md"
           filters:
             branches:
               only:
                 - master
             # tags:
             #   only: /^v+\d+\.\d+\.\d+$/
-
-commands: # a reusable command with parameters
-  set-new-version-tag:
-    description: "Get Semver tag from github via git API, update it via script and set into BASH_ENV"
-    parameters:
-      level:
-        description: "Which semver level will be incremented [M/m/p] for Major/minor/patch"
-        default: "p"
-        type: string
-    steps:
-      - run:
-          name: "SemVer version update increment"
-          command: |
-            version=`curl https://api.github.com/repos/${CIRCLE_PROJECT_USERNAME}/${CIRCLE_PROJECT_REPONAME}/releases/latest -s | jq .name -r` &&
-            git clone https://gist.github.com/GagMirz/750dc7cffbc6cd37750cb07ed5a616d5 SemVer &&
-            chmod 777 SemVer/increment_version.sh 
-            version=`./SemVer/increment_version.sh -<<parameters.level>> $version`
-            echo "export VERSION=${version}" >> "$BASH_ENV"
-
