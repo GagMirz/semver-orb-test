@@ -13,17 +13,8 @@ jobs:
           name: "Adding environment variables for tests"
           command: |
             echo "export config_path='/home/circleci/.utils.config'" >> "$BASH_ENV"
-      # - when:
-      #     condition:
-      #         not: << pipeline.git.tag >>
-      #     steps:
-      #       - set-new-version-tag
-      # - when:
-      #     condition: << pipeline.git.tag >>
-      #     steps:
-      #       - run: 
-      #           name: "SemVer version update"
-      #           command: echo "export VERSION=<< pipeline.git.tag >>" >> "$BASH_ENV"
+            touch /home/circleci/.utils.config
+
       - run: 
           name: "Archive app"
           command: | 
