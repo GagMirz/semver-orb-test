@@ -1,7 +1,7 @@
 version: 2.1
 
 orbs:
-  semver: tmo-orb/semver@1.5.4
+  semver: tmo-orb/semver@1.5.5
 
 # jobs:
 #   publish-github-release:
